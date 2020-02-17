@@ -1,5 +1,5 @@
 // Dependencies
-// ===========================================================
+
 const express = require('express');
 const path = require('path');
 const app = express();
@@ -8,13 +8,12 @@ const fs = require('fs');
 const PORT = process.env.PORT || 3000;
 // set up the express app to handle data parsing
 app.use(express.static(__dirname + '/public'));
-
 app.use(express.urlencoded({ extend: true }));
 app.use(express.json());
 
 let noteID = 0;
 
-/* Functions */
+// Functions 
 
 //Write JSON to db file
 const writeToDB = data => {
@@ -26,7 +25,7 @@ const writeToDB = data => {
   });
 };
 // Routes
-// ===========================================================
+
 // general route
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, './public/index.html'));
@@ -40,10 +39,15 @@ app.get('/api/notes', (req, res) => {
   res.sendFile(path.join(__dirname, './db/db.json'));
 });
 
+app.get("*", function(req, res) {
+  res.sendFile(path.join(__dirname, "./public/index.html"));
+});
+
+
 //POST to db
 app.post('/api/notes', (req, res) => {
   const newNote = req.body;
-  const db = fs.readFile(__dirname + './db/db.json', (err, data) => {
+  const db = fs.readFile(__dirname + '/db/db.json', (err, data) => {
     const notes = JSON.parse(data);
     console.log('ID before', noteID);
     newNote['id'] = noteID;
